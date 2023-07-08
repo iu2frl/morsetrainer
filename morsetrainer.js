@@ -375,57 +375,55 @@ function ctrlCondizioni(message, serverQueue) {
 
 function msgHelp(message) {
     // Informazioni di aiuto per gli utenti
-    if (ctrlCondizioni(message) == 0) {
-        message.channel.send(
-            "- Per iniziare la lezione, digitare il comando !morse seguito dalle lettere, ad esempio, per iniziare una sequenza di codice morse con le sole lettere A, B e C con i parametri di default (20 caratteri, 12 WPM, nota a 800Hz e gruppi da 5 caratteri):" +
-            "```!morse abc```\n\n" +
-            "- Per modificare le impostazioni del codice generato si possono aggiungere altre opzioni, ad esempio per creareuna sequenza di 25 caratteri:" +
-            "```!morse abc c25```\n\n" +
-            "- Per creare una sequenza di 30 caratteri alla velocità di 15 WPM:" +
-            "```!morse abc c30 v15```\n\n" +
-            "- Per creare una sequenza di 15 caratteri alla velocità di 13 WPM e con la nota a 1000Hz:" +
-            "```!morse abc v13 c15 f1000```\n\n" +
-            "- Per creare una sequenza alla velocità di 13 WPM e con spaziatura tra le lettere di 2 punti:" +
-            "```!morse abc v13  s2```\n\n" +
-            "- Per creare una sequenza con spaziatura tra le lettere di 2 punti e spaziatura tra le parole di 3 punti:" +
-            "```!morse abc p3  s2```\n\n" +
-            "- Per creare una sequenza di 20 caratteri alla velocità di 12 WPM, con la nota a 800Hz contenente gruppi di 4 lettere:" +
-            "```!morse abc f800 c20 v12 w4```\n\n" +
-            "- Per creare una sequenza con tutte le lettere dell'alfabeto:" +
-            "```!morse lettere```\n\n" +
-            "- Per creare una sequenza di soli numeri:" +
-            "```!morse numeri```"
-        );
-        message.channel.send(
-            "- Per generare una sequenza di codice Q:" +
-            "```!mq```\n\n" +
-            "- Genera una sequenza di codice Q tra quelle magiormente utilizzate (default 5 parole), per modificare le opzioni:" +
-            "```!mq c10```\n\n" +
-            "- Genera una sequenza di 10 codici Q con le impostazioni di default (12 WPM e nota a 800Hz)" +
-            "```!mq c7 v10```\n\n" +
-            "- Genera una sequenza di 7 codici Q alla velocità di 10 WPM" +
-            "```mq c8 v10 f1000```\n\n" +
-            "- Genera una sequenza di 8 codici Q alla velocità di 10 WPM e con nota a 1000Hz" +
-            "- Per generare una serie di parole di senso compiuto (i modificatori - numero parole, velocità, ecc - sono gli stessi usati per il comando del codice Q):" +
-            "```mpar```\n\n" +
-            "- Per generare una serie di parole inglesi di senso compiuto (i modificatori - numero parole, velocità, ecc - sono gli stessi usati per il comando del codice Q):" +
-            "```meng```\n\n" +
-            "- Per generare una serie di callsign (i modificatori - numero parole, velocità, ecc - sono gli stessi usati per il comando del codice Q):" +
-            "```mcall```\n\n" +
-            "- Per fermare la riproduzione della stringa in corso:" +
-            "```mstop```\n\n" +
-            "- Per visualizzare questo messaggio:" +
-            "```mhelp```\n\n" +
-            "- Per generare un'altra sequenza con le stesse impostazioni:" +
-            "```mrpt```\n\n" +
-            "- L'ultima sequenza può anche essere modificata con gli stessi parametri del comando `!morse`, ad esempio, per generare una sequenza uguale alla precedente ma modificandone la velocità:" +
-            "```mrpt v20```\n\n" +
-            "- Per visualizzare l'ultimo messaggio inviato:" +
-            "```mmsg```\n\n" +
-            "- Per riavviare il BOT in caso di problemi:" +
-            "```mkill```"
-        );
-    }
+    message.channel.send(
+        "- Per iniziare la lezione, digitare il comando !morse seguito dalle lettere, ad esempio, per iniziare una sequenza di codice morse con le sole lettere A, B e C con i parametri di default (20 caratteri, 12 WPM, nota a 800Hz e gruppi da 5 caratteri):" +
+        "```!morse abc```\n\n" +
+        "- Per modificare le impostazioni del codice generato si possono aggiungere altre opzioni, ad esempio per creareuna sequenza di 25 caratteri:" +
+        "```!morse abc c25```\n\n" +
+        "- Per creare una sequenza di 30 caratteri alla velocità di 15 WPM:" +
+        "```!morse abc c30 v15```\n\n" +
+        "- Per creare una sequenza di 15 caratteri alla velocità di 13 WPM e con la nota a 1000Hz:" +
+        "```!morse abc v13 c15 f1000```\n\n" +
+        "- Per creare una sequenza alla velocità di 13 WPM e con spaziatura tra le lettere di 2 punti:" +
+        "```!morse abc v13  s2```\n\n" +
+        "- Per creare una sequenza con spaziatura tra le lettere di 2 punti e spaziatura tra le parole di 3 punti:" +
+        "```!morse abc p3  s2```\n\n" +
+        "- Per creare una sequenza di 20 caratteri alla velocità di 12 WPM, con la nota a 800Hz contenente gruppi di 4 lettere:" +
+        "```!morse abc f800 c20 v12 w4```\n\n" +
+        "- Per creare una sequenza con tutte le lettere dell'alfabeto:" +
+        "```!morse lettere```\n\n" +
+        "- Per creare una sequenza di soli numeri:" +
+        "```!morse numeri```"
+    );
+    message.channel.send(
+        "- Per generare una sequenza di codice Q:" +
+        "```!mq```\n\n" +
+        "- Genera una sequenza di codice Q tra quelle magiormente utilizzate (default 5 parole), per modificare le opzioni:" +
+        "```!mq c10```\n\n" +
+        "- Genera una sequenza di 10 codici Q con le impostazioni di default (12 WPM e nota a 800Hz)" +
+        "```!mq c7 v10```\n\n" +
+        "- Genera una sequenza di 7 codici Q alla velocità di 10 WPM" +
+        "```mq c8 v10 f1000```\n\n" +
+        "- Genera una sequenza di 8 codici Q alla velocità di 10 WPM e con nota a 1000Hz" +
+        "- Per generare una serie di parole di senso compiuto (i modificatori - numero parole, velocità, ecc - sono gli stessi usati per il comando del codice Q):" +
+        "```mpar```\n\n" +
+        "- Per generare una serie di parole inglesi di senso compiuto (i modificatori - numero parole, velocità, ecc - sono gli stessi usati per il comando del codice Q):" +
+        "```meng```\n\n" +
+        "- Per generare una serie di callsign (i modificatori - numero parole, velocità, ecc - sono gli stessi usati per il comando del codice Q):" +
+        "```mcall```\n\n" +
+        "- Per fermare la riproduzione della stringa in corso:" +
+        "```mstop```\n\n" +
+        "- Per visualizzare questo messaggio:" +
+        "```mhelp```\n\n" +
+        "- Per generare un'altra sequenza con le stesse impostazioni:" +
+        "```mrpt```\n\n" +
+        "- L'ultima sequenza può anche essere modificata con gli stessi parametri del comando `!morse`, ad esempio, per generare una sequenza uguale alla precedente ma modificandone la velocità:" +
+        "```mrpt v20```\n\n" +
+        "- Per visualizzare l'ultimo messaggio inviato:" +
+        "```mmsg```\n\n" +
+        "- Per riavviare il BOT in caso di problemi:" +
+        "```mkill```"
+    );
 }
 
 function generaSequenza(lun, car) {
@@ -444,8 +442,8 @@ function generaSequenza(lun, car) {
     return result;
 }
 
-async function execute(message, serverQueue) {
-    const voiceChannel = message.member.voice.channel;
+async function execute(message) {
+    console.log("Inizio generazione sequenza");
 
     if (!RiproduzioneAttiva) {
         RiproduzioneAttiva = true;
@@ -456,6 +454,7 @@ async function execute(message, serverQueue) {
         app_LettereOUT = LettereOUT;
 
         if (parole) {
+            console.log("Generazione di parole italiane");
             // Genero "n" parole da un file di testo
             fs.readFile('./parole.txt', function (err, data) {
                 data += '';
@@ -464,18 +463,23 @@ async function execute(message, serverQueue) {
                 for (var i = 0; i < NumCar; i++) {
                     LettereOUT += lines[Math.floor(Math.random() * lines.length)] + " ";
                 }
-                //LettereOUT += codiceQ[(Math.floor(Math.random() * qLen))] + " ";
+                ConvertAndPlay(message);
             })
         } else if (parEng) {
+            console.log("Generazione di parole inglesi");
             // Genero "n" parole da un file di testo
             fs.readFile('./words.txt', function (err, data) {
                 data += '';
-                if (err) throw err;
+                if (err) {
+                    message.channel.send(err.content);
+                    throw err;
+                } 
                 var lines = data.split('\n');
                 for (var i = 0; i < NumCar; i++) {
                     LettereOUT += lines[Math.floor(Math.random() * lines.length)] + " ";
                 }
-                //LettereOUT += codiceQ[(Math.floor(Math.random() * qLen))] + " ";
+                console.log("Generato: " + LettereOUT);
+                ConvertAndPlay(message);
             })
         } else if (messaggioQ) {
             for (var i = 0; i < NumCar; i++) {
@@ -483,6 +487,7 @@ async function execute(message, serverQueue) {
                 // Genero "n" blocchi di codice Q
                 LettereOUT += codiceQ[(Math.floor(Math.random() * qLen))] + " ";
             }
+            ConvertAndPlay(message);
         } else if (callsign) {
             fs.readFile('./callsign.txt', function (err, data) {
                 data += '';
@@ -491,7 +496,7 @@ async function execute(message, serverQueue) {
                 for (var i = 0; i < NumCar; i++) {
                     LettereOUT += lines[Math.floor(Math.random() * lines.length)] + " ";
                 }
-                //LettereOUT += codiceQ[(Math.floor(Math.random() * qLen))] + " ";
+                ConvertAndPlay(message);
             })
 
         } else {
@@ -514,33 +519,7 @@ async function execute(message, serverQueue) {
                     LettereOUT += " ";
                 }
             }
-        }
-
-        try {
-            //Creazione del file di testo da convertire in CW
-            fs.writeFileSync("/tmp/testo.txt", LettereOUT, (err) => {
-                if (err) {
-                    // Errore di scrittura del file
-                    return message.channel.send("Errore FS: " + err);
-                }
-            });
-
-            //Creazione del processo per generare il CW
-            const StringaCom = "ebook2cw -w " + VelCW + " -f " + NotaCW + " -T SINE -o /tmp/TestoCW /tmp/testo.txt";
-            exec(StringaCom, (error, stdout, stderr) => {
-                if (error) {
-                    return message.channel.send("Errore: " + error.message);
-                } if (stderr) {
-                    return message.channel.send("STDErr: " + stderr);
-                }
-                console.log(stdout);
-                //Riproduzione del file generatao
-                play(message.guild, message, LettereOUT);
-            });
-        } catch (err) {
-            // Riporta gli altri errori
-            console.log(err);
-            message.channel.send(err);
+            ConvertAndPlay(message);
         }
     } else {
         // Se sto già eseguendo un comando riporto un errore
@@ -549,7 +528,36 @@ async function execute(message, serverQueue) {
     }
 }
 
+async function ConvertAndPlay(message) {
+    try {
+        //Creazione del file di testo da convertire in CW
+        console.log("Scrittura di: " + LettereOUT);
+        fs.writeFileSync("/tmp/testo.txt", LettereOUT, (err) => {
+            if (err) {
+                // Errore di scrittura del file
+                message.channel.send("Errore FS: " + err);
+                return
+            }
+        });
 
+        //Creazione del processo per generare il CW
+        const StringaCom = "ebook2cw -w " + VelCW + " -f " + NotaCW + " -T SINE -o /tmp/TestoCW /tmp/testo.txt";
+        exec(StringaCom, (error, stdout, stderr) => {
+            if (error) {
+                return message.channel.send("Errore: " + error.message);
+            } if (stderr) {
+                return message.channel.send("STDErr: " + stderr);
+            }
+            console.log(stdout);
+            //Riproduzione del file generatao
+            play(message.guild, message, LettereOUT);
+        });
+    } catch (err) {
+        // Riporta gli altri errori
+        console.log(err);
+        message.channel.send(err);
+    }
+}
 
 function stop(serverQueue, message) {
     // Funzione per bloccare il messaggio in corso
@@ -560,10 +568,8 @@ function stop(serverQueue, message) {
     }
 
     if (RiproduzioneAttiva) {
-        // Uccido l'oggetto dispatcher (riproduttore audio)
-        serverQueue.connection.dispatcher.end();
-        serverQueue.songs = [];
-
+        const connection = getVoiceConnection(message.guild.id);
+        connection.destroy();
         RiproduzioneAttiva = false;
         message.channel.send("OK! Me ne torno nel mio cloud...");
         staiZitto = true;
@@ -605,7 +611,7 @@ async function play(guild, message, testo) {
                 console.log("Fine del messaggio CW");
                 RiproduzioneAttiva = false;
                 message.channel.send("Testo: " + testo.toUpperCase());
-            } 
+            }
         });
     } catch (err) {
         if (err instanceof TypeError && err.message.includes("Cannot read property 'join' of null")) {
