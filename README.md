@@ -20,3 +20,14 @@ This bot creates random strings to a txt file that are then converted to morse c
 3. Configure the API Key in the `config.json` file
 4. (optional) Specify the commands prefix (`!` by default)
 5. Launch the bot!
+
+# Sources
+
+### Create a music bot
+[https://gabrieltanner.org/blog/dicord-music-bot](https://gabrieltanner.org/blog/dicord-music-bot)
+
+### Discord: play.js
+[https://discord.js.org/#/docs/main/stable/class/PlayInterface?scrollTo=play](https://discord.js.org/#/docs/main/stable/class/PlayInterface?scrollTo=play)
+
+### Ebook2cw
+[http://manpages.ubuntu.com/manpages/xenial/man1/ebook2cw.1.html](http://manpages.ubuntu.com/manpages/xenial/man1/ebook2cw.1.html)
