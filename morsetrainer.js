@@ -58,11 +58,12 @@ client.once("disconnect", () => {
 });
 
 client.on("message", async message => {
+    //console.log("Ricevuto: " + message.content)
     // Viene ricevuto un messaggio dalla chat
     if (message.author.bot) return;
     // Controlla come inizia il messaggio ed agisci se ha il "prefix"
     if (!message.content.startsWith(prefix)) return;
-
+    console.log("Elaborazione del comando...")
     const serverQueue = queue.get(message.guild.id);
 
     // Controllo il testo ricevuto
@@ -72,7 +73,7 @@ client.on("message", async message => {
             NumCar = "20";
             messaggioQ = false;
             parole = false;
-            parEng= false;
+            parEng = false;
             argIniziale = 2;
             // Eseguo il comando solamente se non sto già riproducendo altro
             if (aggiornaImpostazioni(message)) {
@@ -355,63 +356,53 @@ function msgHelp(message) {
     // Informazioni di aiuto per gli utenti
     if (ctrlCondizioni(message) == 0) {
         message.channel.send(
-            "--- INFORMAZIONI SUL BOT ---\n\n" +
-            "- Per iniziare la lezione, digitare il comando !morse seguito dalle lettere, ad esempio il comando:\n" +
-            "  !morse abc\n" +
-            "  farà iniziare una sequenza di codice morse con le sole lettere A, B e C con i parametri di default\n" +
-            "  ovvero: 20 caratteri, 12 WPM, nota a 800Hz e gruppi da 5 caratteri\n\n" +
-            "- Per modificare le impostazioni del codice generato si possono aggiungere altre opzioni, ovvero:\n" +
-            "  !morse abc c25 \n" +
-            "  Creerà una sequenza di 25 caratteri\n" +
-            "  !morse abc c30 v15\n" +
-            "  Creerà una sequenza di 30 caratteri alla velocità di 15 WPM\n" +
-            "  !morse abc v13 c15 f1000\n" +
-            "  Creerà una sequenza di 15 caratteri alla velocità di 13 WPM e con la nota a 1000Hz\n" +
-            "  !morse abc v13  s2\n" +
-            "  Creerà una sequenza alla velocità di 13 WPM e con spaziatura tra le lettere di 2 punti\n" +
-            "  !morse abc p3  s2\n" +
-            "  Creerà una sequenza con spaziatura tra le lettere di 2 punti e spaziatura tra le parole di 3 punti\n" +
-            "  !morse abc f800 c20 v12 w4\n" +
-            "  Creerà una sequenza di 20 caratteri alla velocità di 12 WPM, con la nota a 800Hz contenente gruppi di 4 lettere\n\n" +
-            "  !morse lettere\n" +
-            "  Creerà una sequenza con tutte le lettere dell'alfabeto\n\n" +
-            "  !morse numeri\n" +
-            "  Creerà una sequenza con tutti i numeri\n\n"
+            "- Per iniziare la lezione, digitare il comando !morse seguito dalle lettere, ad esempio, per iniziare una sequenza di codice morse con le sole lettere A, B e C con i parametri di default (20 caratteri, 12 WPM, nota a 800Hz e gruppi da 5 caratteri):" +
+            "```!morse abc```\n\n" +
+            "- Per modificare le impostazioni del codice generato si possono aggiungere altre opzioni, ad esempio per creareuna sequenza di 25 caratteri:" +
+            "```!morse abc c25```\n\n" +
+            "- Per creare una sequenza di 30 caratteri alla velocità di 15 WPM:" +
+            "```!morse abc c30 v15```\n\n" +
+            "- Per creare una sequenza di 15 caratteri alla velocità di 13 WPM e con la nota a 1000Hz:" +
+            "```!morse abc v13 c15 f1000```\n\n" +
+            "- Per creare una sequenza alla velocità di 13 WPM e con spaziatura tra le lettere di 2 punti:" +
+            "```!morse abc v13  s2```\n\n" +
+            "- Per creare una sequenza con spaziatura tra le lettere di 2 punti e spaziatura tra le parole di 3 punti:" +
+            "```!morse abc p3  s2```\n\n" +
+            "- Per creare una sequenza di 20 caratteri alla velocità di 12 WPM, con la nota a 800Hz contenente gruppi di 4 lettere:" +
+            "```!morse abc f800 c20 v12 w4```\n\n" +
+            "- Per creare una sequenza con tutte le lettere dell'alfabeto:" +
+            "```!morse lettere```\n\n" +
+            "- Per creare una sequenza di soli numeri:" +
+            "```!morse numeri```"
         );
         message.channel.send(
-            "- Per generare una sequenza di codice Q\n" +
-            "  !mq\n" +
-            "  Genera una sequenza di codice Q tra quelle magiormente utilizzate (default 5 parole), per modificare le opzioni:\n" +
-            "  !mq c10\n" +
-            "  Genera una sequenza di 10 codici Q con le impostazioni di default (12 WPM e nota a 800Hz)\n" +
-            "  !mq c7 v10\n" +
-            "  Genera una sequenza di 7 codici Q alla velocità di 10 WPM\n" +
-            "  !mq c8 v10 f1000\n" +
-            "  Genera una sequenza di 8 codici Q alla velocità di 10 WPM e con nota a 1000Hz\n\n" +
-            "- Per generare una serie di parole di senso compiuto:\n" +
-            "  !mpar\n" +
-            "  I modificatori (numero parole, velocità, ecc...) sono gli stessi usati per il comando del codice Q\n\n" +
-            "- Per generare una serie di parole inglesi di senso compiuto:\n" +
-            "  !meng\n" +
-            "  I modificatori (numero parole, velocità, ecc...) sono gli stessi usati per il comando del codice Q\n\n" +
-            "- Per generare una serie di callsign:\n" +
-            "  !mcall\n" +
-            "  I modificatori (numero parole, velocità, ecc...) sono gli stessi usati per il comando del codice Q\n\n" +
-            "- Per fermare la riproduzione della stringa in corso:\n" +
-            "  !mstop\n\n" +
-            "- Per visualizzare questo messaggio:\n" +
-            "  !mhelp\n\n" +
-            "- Per generare un'altra sequenza con le stesse impostazioni:\n" +
-            "  !mrpt\n\n" +
-            "  L'ultima sequenza può anche essere modificata con gli stessi parametri del comando !morse, esempio:\n" +
-            "  !mrpt v20\n" +
-            "  Genera una sequenza uguale alla precedente ma modificando la velocità.\n\n" +
-            "- Per visualizzare l'ultimo messaggio inviato:\n" +
-            "  !mmsg\n\n" +
-            "- Per riavviare il BOT in caso di problemi:\n" +
-            "  !mkill\n\n" +
-            "  \n" +
-            "--- Fine della descrizione del bot ---"
+            "- Per generare una sequenza di codice Q:" +
+            "```!mq```\n\n" +
+            "- Genera una sequenza di codice Q tra quelle magiormente utilizzate (default 5 parole), per modificare le opzioni:" +
+            "```!mq c10```\n\n" +
+            "- Genera una sequenza di 10 codici Q con le impostazioni di default (12 WPM e nota a 800Hz)" +
+            "```!mq c7 v10```\n\n" +
+            "- Genera una sequenza di 7 codici Q alla velocità di 10 WPM" +
+            "```mq c8 v10 f1000```\n\n" +
+            "- Genera una sequenza di 8 codici Q alla velocità di 10 WPM e con nota a 1000Hz" +
+            "- Per generare una serie di parole di senso compiuto (i modificatori - numero parole, velocità, ecc - sono gli stessi usati per il comando del codice Q):" +
+            "```mpar```\n\n" +
+            "- Per generare una serie di parole inglesi di senso compiuto (i modificatori - numero parole, velocità, ecc - sono gli stessi usati per il comando del codice Q):" +
+            "```meng```\n\n" +
+            "- Per generare una serie di callsign (i modificatori - numero parole, velocità, ecc - sono gli stessi usati per il comando del codice Q):" +
+            "```mcall```\n\n" +
+            "- Per fermare la riproduzione della stringa in corso:" +
+            "```mstop```\n\n" +
+            "- Per visualizzare questo messaggio:" +
+            "```mhelp```\n\n" +
+            "- Per generare un'altra sequenza con le stesse impostazioni:" +
+            "```mrpt```\n\n" +
+            "- L'ultima sequenza può anche essere modificata con gli stessi parametri del comando `!morse`, ad esempio, per generare una sequenza uguale alla precedente ma modificandone la velocità:" +
+            "```mrpt v20```\n\n" +
+            "- Per visualizzare l'ultimo messaggio inviato:" +
+            "```mmsg```\n\n" +
+            "- Per riavviare il BOT in caso di problemi:" +
+            "```mkill```"
         );
     }
 }
@@ -486,26 +477,6 @@ async function execute(message, serverQueue) {
                 LettereOUT += codiceQ[(Math.floor(Math.random() * qLen))] + " ";
             }
         } else if (callsign) {
-            /*
-            // Funzione per generare callsign in maniera casuale
-            const lunPref = (Math.floor(Math.random() * 2)) + 1;
-            const lunSuff = (Math.floor(Math.random() * 3)) + 1;
-
-            // Genero "n" callsign
-            for (var i = 0; i < NumCar; i++) {
-                // Genero il prefisso
-                for (j = 0; j < lunPref; i++) {
-                    LettereOUT += aryAlfabeto[j];
-                }
-                // Genero il numero
-                LettereOUT += (Math.floor(Math.random() * 9))
-                // Genero il suffisso
-                for (j = 0; j < lunSuff; i++) {
-                    LettereOUT += aryAlfabeto[j];
-                }
-                LettereOUT += " ";
-            }
-            */
             fs.readFile('./callsign.txt', function (err, data) {
                 data += '';
                 if (err) throw err;
@@ -569,9 +540,17 @@ async function execute(message, serverQueue) {
             play(message.guild, message, LettereOUT);
 
         } catch (err) {
-            console.log(err);
-            queue.delete(message.guild.id);
-            return message.channel.send(err);
+            if (err instanceof TypeError && err.message.includes("Cannot read property 'join' of null")) {
+                // Gestisci l'errore di mancata connessione alla chat vocale
+                console.log("An error occurred: Cannot read property 'join' of null");
+                message.channel.send("Devi prima accedere ad una chat vocale!")
+            } else {
+                // Riporta gli altri errori
+                console.log(err);
+                queue.delete(message.guild.id);
+                message.channel.send(err);
+                return
+            }
         }
     } else {
         // Se sto già eseguendo un comando riporto un errore

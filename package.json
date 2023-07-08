@@ -1,0 +1,14 @@
+{
+  "name": "MorseTrainer",
+  "version": "1.0.0",
+  "description": "MorseTrainer Discord Bot",
+  "author": "Luca Bennati <iu2frl.mn@gmail.com>, Francesco DeGiudici <iu3gnb@gmail.com>",
+  "main": "morsetrainer.js",
+  "scripts": {
+    "start": "node morsetrainer.js"
+  },
+  "dependencies": {
+    "discord.js": "^12.0.2",
+    "ytdl-core": "^4.1.0"
+  }
+}
