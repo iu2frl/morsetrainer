@@ -31,3 +31,7 @@ This bot creates random strings to a txt file that are then converted to morse c
 
 ### Ebook2cw
 [http://manpages.ubuntu.com/manpages/xenial/man1/ebook2cw.1.html](http://manpages.ubuntu.com/manpages/xenial/man1/ebook2cw.1.html)
+
+# Credits
+
+Created with [IU3GNB](https://github.com/fdegiudici)
