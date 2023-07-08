@@ -1,12 +1,15 @@
 //Librerie necessarie per il funzionamento
 //const Discord = require("discord.js");
 const { Client, GatewayIntentBits, Events } = require('discord.js');
-// Metti qui config.json se necessario, a volte mi dimentico di sistemare
-const { prefix, token } = require("./secrets.json");
 const ytdl = require("ytdl-core");
 const { exec } = require("child_process");
 const fs = require('fs');
 const { createAudioResource, createAudioPlayer, joinVoiceChannel, getVoiceConnection, entersState, VoiceConnectionStatus } = require('@discordjs/voice');
+
+// Bot prefix
+const prefix = "!";
+// Bot token
+const token = process.env.BOT_TOKEN;
 
 //Inizializzazione librerie discord
 //const client = new Discord.Client();
