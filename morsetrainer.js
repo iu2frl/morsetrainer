@@ -1,12 +1,23 @@
 //Librerie necessarie per il funzionamento
-const Discord = require("discord.js");
-const { prefix, token } = require("./config.json");
+//const Discord = require("discord.js");
+const { Client, GatewayIntentBits, Events } = require('discord.js');
+// Metti qui config.json se necessario, a volte mi dimentico di sistemare
+const { prefix, token } = require("./secrets.json");
 const ytdl = require("ytdl-core");
 const { exec } = require("child_process");
 const fs = require('fs');
+const { createAudioResource, createAudioPlayer, joinVoiceChannel, getVoiceConnection, entersState, VoiceConnectionStatus } = require('@discordjs/voice');
 
 //Inizializzazione librerie discord
-const client = new Discord.Client();
+//const client = new Discord.Client();
+const client = new Client({
+    intents: [
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildVoiceStates,
+    ]
+});
 const queue = new Map();
 
 //Impostazioni di default
@@ -57,13 +68,13 @@ client.once("disconnect", () => {
     console.log("Disconnessione!");
 });
 
-client.on("message", async message => {
+client.on(Events.MessageCreate, async message => {
     //console.log("Ricevuto: " + message.content)
     // Viene ricevuto un messaggio dalla chat
     if (message.author.bot) return;
     // Controlla come inizia il messaggio ed agisci se ha il "prefix"
     if (!message.content.startsWith(prefix)) return;
-    console.log("Elaborazione del comando...")
+    console.log("Elaborazione del comando [" + message.content + "]")
     const serverQueue = queue.get(message.guild.id);
 
     // Controllo il testo ricevuto
@@ -244,12 +255,22 @@ function aggiornaImpostazioni(message) {
     if (argIniziale == 2) {
         //Scelta del valore iniziale a seconda del comando ricevuto
         Lettere = args[1];
-
-        if (Lettere == "") {
-            //Se non ho specificato le lettere nel primo comando fermo l'esecuzione
-            message.channel.send("Errore! Devi specificare le lettere da usare!");
-            return 0;
-        } else if (isLetter(Lettere)) {
+        try {
+            if (Lettere.length < 1) {
+                //Se non ho specificato le lettere nel primo comando fermo l'esecuzione
+                message.channel.send("Errore! Devi specificare le lettere da usare!");
+                return 0;
+            }
+        } catch (Exc) {
+            if (Exc instanceof TypeError && Exc.message.includes("Cannot read properties of undefined")) {
+                message.channel.send("Errore! Devi specificare le lettere da usare!");
+                return 0
+            } else {
+                message.channel.send(Exc.message)
+                return 0
+            }
+        }
+        if (isLetter(Lettere)) {
             //Controllo che le lettere siano corrette
             message.channel.send("Errore! Hai usato caratteri non ammessi!");
             return 0;
@@ -430,20 +451,6 @@ async function execute(message, serverQueue) {
         RiproduzioneAttiva = true;
         var NumCicli;
 
-        const song = {
-            title: 'Morse Code',
-            url: 'sample'
-        };
-
-        const queueContruct = {
-            textChannel: message.channel,
-            voiceChannel: voiceChannel,
-            connection: null,
-            songs: [],
-            volume: 5,
-            playing: true
-        };
-
         // Inizializzo la stringa da generare
         LettereOUT = "VVVVV ";
         app_LettereOUT = LettereOUT;
@@ -509,14 +516,7 @@ async function execute(message, serverQueue) {
             }
         }
 
-        queue.set(message.guild.id, queueContruct);
-        queueContruct.songs.push(song);
-
         try {
-            // Aggiunge il BOT al canale vocale
-            var connection = await voiceChannel.join();
-            queueContruct.connection = connection;
-
             //Creazione del file di testo da convertire in CW
             fs.writeFileSync("/tmp/testo.txt", LettereOUT, (err) => {
                 if (err) {
@@ -534,29 +534,22 @@ async function execute(message, serverQueue) {
                     return message.channel.send("STDErr: " + stderr);
                 }
                 console.log(stdout);
+                //Riproduzione del file generatao
+                play(message.guild, message, LettereOUT);
             });
-
-            //Riproduzione del file generatao
-            play(message.guild, message, LettereOUT);
-
         } catch (err) {
-            if (err instanceof TypeError && err.message.includes("Cannot read property 'join' of null")) {
-                // Gestisci l'errore di mancata connessione alla chat vocale
-                console.log("An error occurred: Cannot read property 'join' of null");
-                message.channel.send("Devi prima accedere ad una chat vocale!")
-            } else {
-                // Riporta gli altri errori
-                console.log(err);
-                queue.delete(message.guild.id);
-                message.channel.send(err);
-                return
-            }
+            // Riporta gli altri errori
+            console.log(err);
+            message.channel.send(err);
         }
     } else {
         // Se sto già eseguendo un comando riporto un errore
-        return message.channel.send("Sto già eseguendo una sequenza, devi prima fermarla con !mstop");
+        message.channel.send("Sto già eseguendo una sequenza, devi prima fermarla con !mstop");
+        return
     }
 }
+
+
 
 function stop(serverQueue, message) {
     // Funzione per bloccare il messaggio in corso
@@ -581,47 +574,84 @@ function stop(serverQueue, message) {
     return
 }
 
-function play(guild, message, testo) {
+async function play(guild, message, testo) {
     const serverQueue = queue.get(guild.id);
     primoCiclo = false;
-
-    const dispatcher = serverQueue.connection
-        //Riproduco la stringa convertita in CW
-        .play('/tmp/TestoCW0000.mp3')
-        .on("finish", () => {
-            //return message.channel.send("Fine del messaggio CW");
-            serverQueue.voiceChannel.leave();
-
-            RiproduzioneAttiva = false;
-            if (staiZitto) {
-                staiZitto = false;
-            } else {
-                if ((!messaggioQ) & (!parole) & (!callsign) & (!parEng)) {
-                    var strTemp = "";
-                    //Ricostruisco il messaggio originale togliendo le spaziature modificate
-                    //eseguo il codice solamente se non si tratta di Qodice Q
-                    for (var i = 0; i < testo.length; i++) {
-                        if (testo.charAt(i) !== " ") {
-                            strTemp += testo.charAt(i);
-                        }
-                    }
-                    testo = "";
-                    for (var i = 0; i < strTemp.length; i += WordLen) {
-                        testo += strTemp.substring(i, (i + WordLen)) + " ";
-                    }
-                }
-                message.channel.send("Testo: " + testo.toUpperCase());
-            }
-            return
+    try {
+        const voiceChannel = message.member.voice.channel;
+        const voiceConnection = joinVoiceChannel({
+            channelId: voiceChannel.id,
+            guildId: message.guild.id,
+            adapterCreator: message.guild.voiceAdapterCreator,
+            selfDeaf: false,
         })
-        .on("error", error => console.error(error));
-    dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+        const connection = getVoiceConnection(message.guild.id);
+        const player = createAudioPlayer();
+        let resource = createAudioResource("/tmp/TestoCW0000.mp3");
+        try {
+            await entersState(voiceConnection, VoiceConnectionStatus.Ready, 5000);
+            console.log("Connected: " + voiceChannel.guild.name);
+        } catch (error) {
+            message.channel.send(error.content)
+            console.log("Voice Connection not ready within 5s.", error);
+            return null;
+        }
+        connection.subscribe(player);
+        player.play(resource);
+        if (player.pause(), () => voiceConnection.disconnect());
+        console.log("Fine del messaggio CW");
+        RiproduzioneAttiva = false;
+        message.channel.send("Testo: " + testo.toUpperCase());
+    } catch (err) {
+        if (err instanceof TypeError && err.message.includes("Cannot read property 'join' of null")) {
+            // Gestisci l'errore di mancata connessione alla chat vocale
+            console.log("An error occurred: Cannot read property 'join' of null");
+            message.channel.send("Devi prima accedere ad una chat vocale!")
+            return;
+        } else {
+            message.channel.send(err.message);
+            return;
+        }
+    }
+
+    // const dispatcher = serverQueue.connection
+    //     //Riproduco la stringa convertita in CW
+    //     .play('/tmp/TestoCW0000.mp3')
+    //     .on("finish", () => {
+    //         //return message.channel.send("Fine del messaggio CW");
+    //         serverQueue.voiceChannel.leave();
+
+    //         RiproduzioneAttiva = false;
+    //         if (staiZitto) {
+    //             staiZitto = false;
+    //         } else {
+    //             if ((!messaggioQ) & (!parole) & (!callsign) & (!parEng)) {
+    //                 var strTemp = "";
+    //                 //Ricostruisco il messaggio originale togliendo le spaziature modificate
+    //                 //eseguo il codice solamente se non si tratta di Qodice Q
+    //                 for (var i = 0; i < testo.length; i++) {
+    //                     if (testo.charAt(i) !== " ") {
+    //                         strTemp += testo.charAt(i);
+    //                     }
+    //                 }
+    //                 testo = "";
+    //                 for (var i = 0; i < strTemp.length; i += WordLen) {
+    //                     testo += strTemp.substring(i, (i + WordLen)) + " ";
+    //                 }
+    //             }
+    //             message.channel.send("Testo: " + testo.toUpperCase());
+    //         }
+    //         return
+    //     })
+    //     .on("error", error => console.error(error));
+    // dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
 }
 
 function botKill(message) {
     //Uccidi il BOT
     console.log("Processo ucciso su comando del utente");
     message.channel.send("Addio mondo crudele!");
+
     return process.exit(200);
 }
 
