@@ -597,11 +597,16 @@ async function play(guild, message, testo) {
             return null;
         }
         connection.subscribe(player);
+        message.channel.send("Messaggio in arrivo!");
         player.play(resource);
-        if (player.pause(), () => voiceConnection.disconnect());
-        console.log("Fine del messaggio CW");
-        RiproduzioneAttiva = false;
-        message.channel.send("Testo: " + testo.toUpperCase());
+        player.on('stateChange', (oldState, newState) => {
+            if (newState.status === 'idle') {
+                voiceConnection.destroy();
+                console.log("Fine del messaggio CW");
+                RiproduzioneAttiva = false;
+                message.channel.send("Testo: " + testo.toUpperCase());
+            } 
+        });
     } catch (err) {
         if (err instanceof TypeError && err.message.includes("Cannot read property 'join' of null")) {
             // Gestisci l'errore di mancata connessione alla chat vocale
